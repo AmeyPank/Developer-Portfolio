@@ -1,16 +1,18 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { findProjects } from "@/features/projects/project.repository";
+import { mapProjectRecord } from "@/features/projects/project.mapper";
 import ProjectForm from "@/components/admin/ProjectForm";
-import { deleteProject, toggleFeaturedProject } from "@/app/actions/projects";
+import { deleteProjectAction } from "@/features/projects/actions/delete-project.action";
+import { toggleFeaturedProjectAction } from "@/features/projects/actions/toggle-featured-project.action";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { requireAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminProjectsPage() {
-  const projects = await prisma.project.findMany({
-    orderBy: [{ featured: "desc" }, { order: "asc" }, { createdAt: "desc" }],
-  });
+  await requireAdmin();
+  const projects = (await findProjects()).map(mapProjectRecord);
 
   return (
     <main className="min-h-screen bg-background p-6 md:p-12">
@@ -26,14 +28,12 @@ export default async function AdminProjectsPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" asChild>
-              <Link href="/admin">Messages Inbox</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/" target="_blank">
-                View Live Site
-              </Link>
-            </Button>
+            <Link href="/admin" className="inline-flex h-9 items-center rounded-lg border border-border bg-background px-3 text-sm font-medium transition hover:bg-muted">
+              Messages Inbox
+            </Link>
+            <Link href="/" target="_blank" rel="noreferrer" className="inline-flex h-9 items-center rounded-lg border border-border bg-background px-3 text-sm font-medium transition hover:bg-muted">
+              View Live Site
+            </Link>
           </div>
         </div>
 
@@ -75,12 +75,12 @@ export default async function AdminProjectsPage() {
                         {p.description}
                       </p>
                       <div className="flex gap-2 flex-wrap pt-1">
-                        {p.tags.split(",").map((t) => (
+                        {p.tags.map((t) => (
                           <span
                             key={t}
                             className="text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded"
                           >
-                            {t.trim()}
+                            {t}
                           </span>
                         ))}
                       </div>
@@ -88,17 +88,16 @@ export default async function AdminProjectsPage() {
 
                     <div className="flex items-center gap-2 shrink-0">
                       <form
-                        action={toggleFeaturedProject.bind(
+                        action={toggleFeaturedProjectAction.bind(
                           null,
                           p.id,
-                          p.featured,
                         )}
                       >
                         <Button variant="ghost" size="sm" type="submit">
                           {p.featured ? "Unfeature" : "Make Featured"}
                         </Button>
                       </form>
-                      <form action={deleteProject.bind(null, p.id)}>
+                      <form action={deleteProjectAction.bind(null, p.id)}>
                         <Button
                           variant="destructive"
                           size="sm"
@@ -108,6 +107,9 @@ export default async function AdminProjectsPage() {
                           Delete
                         </Button>
                       </form>
+                      <Link href={`/admin/projects/${p.id}/edit`} className="inline-flex h-8 items-center rounded-lg border border-cyan-200/20 bg-cyan-200/[0.08] px-3 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-200/[0.15]">
+                        Edit
+                      </Link>
                     </div>
                   </div>
                 ))}

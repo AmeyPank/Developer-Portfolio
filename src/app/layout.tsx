@@ -3,8 +3,19 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Portfolio | Full-Stack & Backend Engineer",
-  description: "Personal developer portfolio and projects showcase",
+  title: {
+    default: "Full-Stack Engineer | Portfolio",
+    template: "%s | Full-Stack Engineer",
+  },
+  description:
+    "Portfolio of a backend-minded full-stack engineer building dependable systems, thoughtful APIs, and useful web products.",
+  openGraph: {
+    title: "Full-Stack Engineer | Portfolio",
+    description:
+      "Selected work in backend engineering, full-stack product development, and reliable web systems.",
+    type: "website",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -14,14 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
+      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-cyan-300 selection:text-slate-950">
         <Navbar />
         <main>{children}</main>
-        {process.env.NODE_ENV === "development" && (
-          <div className="fixed bottom-3 right-3 z-50 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-500 border border-amber-500/40">
-            ENV: {process.env.NODE_ENV.toUpperCase()}
-          </div>
-        )}
       </body>
     </html>
   );

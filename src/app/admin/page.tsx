@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { requireAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
+  await requireAdmin();
   const messages = await prisma.contactMessage.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -132,11 +134,7 @@ export default async function AdminDashboardPage() {
                     {/* Actions */}
                     <div className="flex items-center gap-2 shrink-0">
                       <form
-                        action={toggleMessageReadStatus.bind(
-                          null,
-                          item.id,
-                          item.read,
-                        )}
+                        action={toggleMessageReadStatus.bind(null, item.id)}
                       >
                         <Button variant="ghost" size="sm" type="submit">
                           {item.read ? "Mark Unread" : "Mark Read"}
