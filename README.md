@@ -27,7 +27,7 @@ src/
     portfolio/          Curated profile, skill groups, and offline project defaults
     projects/            Project DTOs, schema, record mapper, service, repository
   lib/                   Shared auth, database, mail, and utility infrastructure
-prisma/                  MySQL schema and admin seed script
+prisma/                  MySQL schema and admin seed script prisma error
 ```
 
 Database projects are mapped into a view DTO. CineFlow remains visible as a curated featured project until a matching database entry is created, so adding another CMS project does not accidentally remove it from the public site. If the database is temporarily unavailable or has no entries, the site renders curated defaults. Admin pages and mutations verify the account against the database; middleware also protects admin routes.
