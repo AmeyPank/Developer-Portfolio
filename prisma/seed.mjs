@@ -51,9 +51,9 @@ async function main() {
       title: "AI Code Auditor",
       description:
         "A backend-focused code review concept for spotting security risks, style issues, and performance bottlenecks in pull requests.",
-      tags: "NestJS,TypeScript,PostgreSQL,Gemini API,Docker",
-      githubUrl: null,
-      liveUrl: null,
+      tags: "NestJS,TypeScript,PostgreSQL,Gemini API,Inngest,NextAuth,Zustand,Swagger UI",
+      githubUrl: "https://github.com/AmeyPank/AI-Code-Auditor-FE",
+      liveUrl: "https://ai-code-auditor-fe.vercel.app/",
       featured: false,
       order: 1,
     },
